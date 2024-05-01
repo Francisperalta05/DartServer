@@ -1,17 +1,17 @@
-import 'dart:convert';
+// For Google Cloud Run, set _hostname to '0.0.0.0'.
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:shelf/shelf.dart' as shelf;
+import 'package:dart_server/api/api_server.dart';
+import 'package:dart_server/mongo_connection.dart';
 import 'package:shelf/shelf_io.dart' as io;
 
-// For Google Cloud Run, set _hostname to '0.0.0.0'.
 const _hostname = 'localhost';
 
 void main(List<String> args) async {
-  var parser = ArgParser()..addOption('port', abbr: 'p');
-  var result = parser.parse(args);
+  final parser = ArgParser()..addOption('port', abbr: 'p');
+  final result = parser.parse(args);
 
   // For Google Cloud Run, we respect the PORT environment variable
   var portStr = result['port'] ?? Platform.environment['PORT'] ?? '8080';
@@ -24,18 +24,10 @@ void main(List<String> args) async {
     return;
   }
 
-  var handler = const shelf.Pipeline()
-      .addMiddleware(shelf.logRequests())
-      .addHandler(_printData);
+  dataBase = await MongoConnection.connect();
+  final service = Service();
+  final server = await io.serve(service.handler, _hostname, port);
 
-  final server = await io.serve(handler, _hostname, port);
+  // final server = await io.serve(handler, _hostname, port);
   log('Serving at http://${server.address.host}:${server.port}');
-}
-
-shelf.Response _printData(shelf.Request request) {
-  var map = {'users': 'Angel Peralta'};
-
-  log(request.method);
-
-  return shelf.Response.ok(json.encode(map));
 }
