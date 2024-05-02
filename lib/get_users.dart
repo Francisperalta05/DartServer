@@ -1,17 +1,18 @@
 import 'dart:developer';
 
-import 'package:mongo_dart/mongo_dart.dart';
+import 'mongo_connection.dart';
 
 class Users {
-  final Db dataBase;
-  Users(this.dataBase);
+  static Future<Map<String, dynamic>> registerUser(
+      Map<String, dynamic> body) async {
+    final coll = dataBase.collection("usuarios");
 
-  Future<Map<String, dynamic>> registerUser(Map<String, dynamic> body) async {
-    dataBase.dropCollection("usuarioss");
-    return body;
+    final response = await coll.insert(body);
+    log(coll.toString());
+    return response;
   }
 
-  Future<List<Map<String, dynamic>>> getUsers() async {
+  static Future<List<Map<String, dynamic>>> getUsers() async {
     List<Map<String, dynamic>> users = [];
 
     final chequeos = dataBase.collection("usuarios");
@@ -30,7 +31,8 @@ class Users {
     return users;
   }
 
-  Future<List<Map<String, dynamic>>> getUserByName(String userName) async {
+  static Future<List<Map<String, dynamic>>> getUserByName(
+      String userName) async {
     final tablaUsuarios = dataBase.collection("usuarios");
 
     List<Map<String, dynamic>> users = await tablaUsuarios.find().toList();
