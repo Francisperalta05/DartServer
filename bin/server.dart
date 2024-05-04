@@ -22,7 +22,6 @@ void main(List<String> args) async {
     exitCode = 64;
     return;
   }
-
   dataBase = await MongoConnection.connect();
   final service = Service();
   final server = await io.serve(service.handler, ip, port);
