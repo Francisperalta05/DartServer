@@ -1,11 +1,10 @@
 import 'dart:developer';
 
 import 'package:dart_server/jwt/jwt.dart';
-import 'package:mongo_dart/mongo_dart.dart';
 
-import 'mongo_connection.dart';
+import '../mongo_connection.dart';
 
-class Users {
+class UserController {
   static Future<Map<String, dynamic>> registerUser(
       Map<String, dynamic> body) async {
     final response = {
@@ -13,7 +12,7 @@ class Users {
     };
     final coll = dataBase.collection("usuarios");
 
-    // await coll.remove(where.all("numero", [2]));
+    await coll.insert(body);
     log(coll.toString());
 
     return response;

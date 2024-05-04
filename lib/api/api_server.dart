@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-import 'package:dart_server/get_users.dart';
+import 'package:dart_server/controllers/list_controller.dart';
+import 'package:dart_server/controllers/user_controller.dart';
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf_router/shelf_router.dart';
 
@@ -18,8 +19,8 @@ class Api {
   @Route.post("/register")
   Future<shelf.Response> _registerUser(shelf.Request request) async {
     try {
-      final users =
-          await Users.registerUser(json.decode(await request.readAsString()));
+      final users = await UserController.registerUser(
+          json.decode(await request.readAsString()));
       return shelf.Response.ok(json.encode(users));
     } on Exception catch (e) {
       return shelf.Response.badRequest(body: e);
@@ -29,7 +30,7 @@ class Api {
   @Route.get("/users")
   Future<shelf.Response> _getUsers(shelf.Request request) async {
     try {
-      final users = await Users.getUsers();
+      final users = await UserController.getUsers();
       return shelf.Response.ok(json.encode(users));
     } on Exception catch (e) {
       return shelf.Response.badRequest(body: e);
@@ -40,8 +41,34 @@ class Api {
   Future<shelf.Response> _getUserByName(
       shelf.Request request, String userName) async {
     try {
-      final users = await Users.getUserByName(userName);
+      final users = await UserController.getUserByName(userName);
       return shelf.Response.ok(json.encode(users));
+    } on Exception catch (e) {
+      return shelf.Response.badRequest(body: e.toString());
+    }
+  }
+
+  @Route.post('/addItem')
+  Future<shelf.Response> _addItem(shelf.Request request) async {
+    try {
+      final body = await request.readAsString();
+      final result = await ListController.addItem(json.decode(body));
+      return shelf.Response.ok(json.encode(result));
+    } on Exception catch (e) {
+      return shelf.Response.badRequest(body: e.toString());
+    }
+  }
+
+  @Route.post('/removeItem/<itemID>')
+  Future<shelf.Response> _removeItem(
+      shelf.Request request, String itemID) async {
+    try {
+      final result = await ListController.removeItem(itemID);
+      if (result) {
+        return shelf.Response.ok(json.encode(result));
+      } else {
+        return shelf.Response.badRequest(body: "Este elemento no existe");
+      }
     } on Exception catch (e) {
       return shelf.Response.badRequest(body: e.toString());
     }
