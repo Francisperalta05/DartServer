@@ -1,14 +1,21 @@
 import 'dart:developer';
 
+import 'package:dart_server/jwt/jwt.dart';
+import 'package:mongo_dart/mongo_dart.dart';
+
 import 'mongo_connection.dart';
 
 class Users {
   static Future<Map<String, dynamic>> registerUser(
       Map<String, dynamic> body) async {
+    final response = {
+      "token": generateJwt(body),
+    };
     final coll = dataBase.collection("usuarios");
 
-    final response = await coll.insert(body);
+    // await coll.remove(where.all("numero", [2]));
     log(coll.toString());
+
     return response;
   }
 

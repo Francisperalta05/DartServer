@@ -15,12 +15,6 @@ class Service {
 }
 
 class Api {
-  // A handler can have more that one route :)
-  // @Route.get('/messages')
-  // @Route.get('/messages/')
-  // Future<shelf.Response> _messages(shelf.Request request) async =>
-  //     shelf.Response.ok('[]');
-
   @Route.post("/register")
   Future<shelf.Response> _registerUser(shelf.Request request) async {
     try {
