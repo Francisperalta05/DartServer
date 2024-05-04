@@ -33,6 +33,11 @@ Router _$ApiRouter(Api service) {
     service._getUserByName,
   );
   router.add(
+    'GET',
+    r'/items',
+    service._getItems,
+  );
+  router.add(
     'POST',
     r'/addItem',
     service._addItem,

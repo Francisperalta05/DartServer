@@ -48,6 +48,16 @@ class Api {
     }
   }
 
+  @Route.get("/items")
+  Future<shelf.Response> _getItems(shelf.Request request) async {
+    try {
+      final users = await ListController.getItems();
+      return shelf.Response.ok(json.encode(users));
+    } on Exception catch (e) {
+      return shelf.Response.badRequest(body: e);
+    }
+  }
+
   @Route.post('/addItem')
   Future<shelf.Response> _addItem(shelf.Request request) async {
     try {

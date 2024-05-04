@@ -1,14 +1,10 @@
 // For Google Cloud Run, set _hostname to '0.0.0.0'.
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:dart_server/api/api_server.dart';
 import 'package:dart_server/mongo_connection.dart';
 import 'package:shelf/shelf_io.dart' as io;
-
-// const _hostname = '148.0.10.36';
-const _hostname = "localhost";
 
 void main(List<String> args) async {
   final parser = ArgParser()..addOption('port', abbr: 'p');
