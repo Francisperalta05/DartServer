@@ -54,6 +54,7 @@ class ListController {
       Map<String, dynamic> body) async {
     final warroom = {
       "isWarRoom": body["isWarRoom"],
+      "enabled": body["enabled"] ?? true,
       "users": [
         "22300849704",
         "05900111849",
