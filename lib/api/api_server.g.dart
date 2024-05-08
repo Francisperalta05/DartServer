@@ -49,7 +49,12 @@ Router _$ApiRouter(Api service) {
   );
   router.add(
     'POST',
-    r'/isWarRoom',
+    r'/setWarroom',
+    service._setWarRoom,
+  );
+  router.add(
+    'GET',
+    r'/isWarroom',
     service._isWarRoom,
   );
   router.all(

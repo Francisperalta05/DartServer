@@ -50,7 +50,7 @@ class ListController {
     }
   }
 
-  static Future<Map<String, dynamic>> isWarRoom(
+  static Future<Map<String, dynamic>> setWarRoom(
       Map<String, dynamic> body) async {
     final warroom = {
       "isWarRoom": body["isWarRoom"],
@@ -72,5 +72,13 @@ class ListController {
 
     log(body.toString());
     return body;
+  }
+
+  static Future<bool> isWarRoom() async {
+    final collection = dataBase.collection("warroom");
+
+    final item = await collection.find().toList();
+
+    return item.first["isWarRoom"];
   }
 }

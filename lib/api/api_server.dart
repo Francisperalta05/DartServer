@@ -84,11 +84,22 @@ class Api {
     }
   }
 
-  @Route.post('/isWarRoom')
+  @Route.post('/setWarroom')
+  Future<shelf.Response> _setWarRoom(shelf.Request request) async {
+    try {
+      final result = await ListController.setWarRoom(
+          json.decode(await request.readAsString()));
+
+      return shelf.Response.ok(json.encode(result));
+    } on Exception catch (e) {
+      return shelf.Response.badRequest(body: e.toString());
+    }
+  }
+
+  @Route.get('/isWarroom')
   Future<shelf.Response> _isWarRoom(shelf.Request request) async {
     try {
-      final result = await ListController.isWarRoom(
-          json.decode(await request.readAsString()));
+      final result = await ListController.isWarRoom();
 
       return shelf.Response.ok(json.encode(result));
     } on Exception catch (e) {
