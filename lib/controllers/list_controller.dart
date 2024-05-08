@@ -74,11 +74,11 @@ class ListController {
     return body;
   }
 
-  static Future<bool> isWarRoom() async {
+  static Future<Map<String, dynamic>> isWarRoom() async {
     final collection = dataBase.collection("warroom");
 
     final item = await collection.find().toList();
 
-    return item.first["isWarRoom"];
+    return item.first;
   }
 }
