@@ -47,6 +47,11 @@ Router _$ApiRouter(Api service) {
     r'/removeItem/<itemID>',
     service._removeItem,
   );
+  router.add(
+    'POST',
+    r'/isWarRoom',
+    service._isWarRoom,
+  );
   router.all(
     r'/<ignored|.*>',
     service._notFound,

@@ -11,10 +11,12 @@ dependencies:
   args: ^2.5.0
   build_runner: ^2.4.9
   crypto: ^3.0.3
+  encrypt: ^5.0.3
   mongo_dart: ^0.10.2
   shelf: ^1.4.1
   shelf_router: ^1.1.4
   shelf_router_generator: ^1.1.0
+  uuid: ^4.4.0
 
 dev_dependencies:
   lints: ^3.0.0

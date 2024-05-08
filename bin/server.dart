@@ -1,4 +1,6 @@
 // For Google Cloud Run, set _hostname to '0.0.0.0'.
+import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:args/args.dart';
@@ -28,4 +30,17 @@ void main(List<String> args) async {
 
   // final server = await io.serve(handler, _hostname, port);
   print('Serving at http://${server.address.host}:${server.port}');
+
+  // setTimer();
 }
+
+// Timer? timer;
+
+// void setTimer() {
+//   timer?.cancel();
+//   timer = Timer.periodic(Duration(seconds: 1), (timer) {
+//     log(DateTime.now().millisecondsSinceEpoch.toString());
+
+//     // timer.cancel();
+//   });
+// }

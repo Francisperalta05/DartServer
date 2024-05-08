@@ -49,4 +49,28 @@ class ListController {
       return false;
     }
   }
+
+  static Future<Map<String, dynamic>> isWarRoom(
+      Map<String, dynamic> body) async {
+    final warroom = {
+      "isWarRoom": body["isWarRoom"],
+      "users": [
+        "22300849704",
+        "05900111849",
+        "40220724633",
+        "40220904086",
+        "40220943159",
+        "00118314723"
+      ],
+    };
+
+    final collection = dataBase.collection("warroom");
+
+    await collection.drop();
+
+    await collection.insert(warroom);
+
+    log(body.toString());
+    return body;
+  }
 }

@@ -1,10 +1,14 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
+import 'package:uuid/uuid.dart';
 
 const secretKey = "dart_server_key";
 
 String generateJwt(Map<String, dynamic> payload) {
+  final key2 = Uuid().v4();
+  log(key2);
   // Codificar el encabezado
   final Map<String, String> header = {'alg': 'HS256', 'typ': 'JWT'};
   final String encodedHeader =

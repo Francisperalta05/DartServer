@@ -84,6 +84,18 @@ class Api {
     }
   }
 
+  @Route.post('/isWarRoom')
+  Future<shelf.Response> _isWarRoom(shelf.Request request) async {
+    try {
+      final result = await ListController.isWarRoom(
+          json.decode(await request.readAsString()));
+
+      return shelf.Response.ok(json.encode(result));
+    } on Exception catch (e) {
+      return shelf.Response.badRequest(body: e.toString());
+    }
+  }
+
   // Embedded URL parameters may also be associated with a regular-expression
   // that the pattern must match.
   // @Route.get('/user/<userId|[0-9]+>')
