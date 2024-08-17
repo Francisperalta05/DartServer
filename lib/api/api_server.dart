@@ -2,8 +2,11 @@ import 'dart:convert';
 
 import 'package:dart_server/controllers/list_controller.dart';
 import 'package:dart_server/controllers/user_controller.dart';
+import 'package:dart_server/models/user_model.dart';
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf_router/shelf_router.dart';
+
+import '../models/item_model.dart';
 
 part 'api_server.g.dart';
 
@@ -16,11 +19,24 @@ class Service {
 }
 
 class Api {
-  @Route.post("/register")
+  @Route.post("/registerUser")
   Future<shelf.Response> _registerUser(shelf.Request request) async {
     try {
-      final users = await UserController.registerUser(
-          json.decode(await request.readAsString()));
+      final data = await request.readAsString();
+      final user = UserModel.fromJson(json.decode(data));
+      final users = await UserController.registerUser(user);
+      return shelf.Response.ok(json.encode(users));
+    } on Exception catch (e) {
+      return shelf.Response.badRequest(body: e);
+    }
+  }
+
+  @Route.post("/loginUser")
+  Future<shelf.Response> _loginUser(shelf.Request request) async {
+    try {
+      final data = await request.readAsString();
+      final user = UserModel.fromJson(json.decode(data));
+      final users = await UserController.loginUser(user);
       return shelf.Response.ok(json.encode(users));
     } on Exception catch (e) {
       return shelf.Response.badRequest(body: e);
@@ -51,7 +67,10 @@ class Api {
   @Route.get("/items")
   Future<shelf.Response> _getItems(shelf.Request request) async {
     try {
-      final users = await ListController.getItems();
+      final data = await request.readAsString();
+      final user = UserModel.fromJson(json.decode(data));
+
+      final users = await ItemController.getItems(user.userUID ?? "");
       return shelf.Response.ok(json.encode(users));
     } on Exception catch (e) {
       return shelf.Response.badRequest(body: e);
@@ -62,7 +81,10 @@ class Api {
   Future<shelf.Response> _addItem(shelf.Request request) async {
     try {
       final body = await request.readAsString();
-      final result = await ListController.addItem(json.decode(body));
+
+      final item = ItemModel.fromJson(json.decode(body));
+
+      final result = await ItemController.addItem(item, request.headers);
       return shelf.Response.ok(json.encode(result));
     } on Exception catch (e) {
       return shelf.Response.badRequest(body: e.toString());
@@ -73,35 +95,12 @@ class Api {
   Future<shelf.Response> _removeItem(
       shelf.Request request, String itemID) async {
     try {
-      final result = await ListController.removeItem(itemID);
+      final result = await ItemController.removeItem(itemID);
       if (result) {
         return shelf.Response.ok(json.encode(result));
       } else {
         return shelf.Response.badRequest(body: "Este elemento no existe");
       }
-    } on Exception catch (e) {
-      return shelf.Response.badRequest(body: e.toString());
-    }
-  }
-
-  @Route.post('/setWarroom')
-  Future<shelf.Response> _setWarRoom(shelf.Request request) async {
-    try {
-      final result = await ListController.setWarRoom(
-          json.decode(await request.readAsString()));
-
-      return shelf.Response.ok(json.encode(result));
-    } on Exception catch (e) {
-      return shelf.Response.badRequest(body: e.toString());
-    }
-  }
-
-  @Route.get('/isWarroom')
-  Future<shelf.Response> _isWarRoom(shelf.Request request) async {
-    try {
-      final result = await ListController.isWarRoom();
-
-      return shelf.Response.ok(json.encode(result));
     } on Exception catch (e) {
       return shelf.Response.badRequest(body: e.toString());
     }

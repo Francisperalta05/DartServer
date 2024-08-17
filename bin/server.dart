@@ -1,5 +1,4 @@
 // For Google Cloud Run, set _hostname to '0.0.0.0'.
-import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
@@ -25,11 +24,11 @@ void main(List<String> args) async {
     return;
   }
   dataBase = await MongoConnection.connect();
+  log("DataBase Done");
   final service = Service();
   final server = await io.serve(service.handler, ip, port);
 
-  // final server = await io.serve(handler, _hostname, port);
-  print('Serving at http://${server.address.host}:${server.port}');
+  log('Serving at http://${server.address.host}:${server.port}}');
 
   // setTimer();
 }

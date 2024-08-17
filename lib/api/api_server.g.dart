@@ -19,8 +19,13 @@ Router _$ApiRouter(Api service) {
   final router = Router();
   router.add(
     'POST',
-    r'/register',
+    r'/registerUser',
     service._registerUser,
+  );
+  router.add(
+    'POST',
+    r'/loginUser',
+    service._loginUser,
   );
   router.add(
     'GET',
@@ -46,16 +51,6 @@ Router _$ApiRouter(Api service) {
     'POST',
     r'/removeItem/<itemID>',
     service._removeItem,
-  );
-  router.add(
-    'POST',
-    r'/setWarroom',
-    service._setWarRoom,
-  );
-  router.add(
-    'GET',
-    r'/isWarroom',
-    service._isWarRoom,
   );
   router.all(
     r'/<ignored|.*>',
