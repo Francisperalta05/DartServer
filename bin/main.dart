@@ -14,7 +14,7 @@ void main(List<String> args) async {
   final ip = InternetAddress.anyIPv4;
 
   // For Google Cloud Run, we respect the PORT environment variable
-  var portStr = result['port'] ?? Platform.environment['PORT'] ?? '8080';
+  var portStr = result['port'] ?? Platform.environment['PORT'] ?? '80';
   var port = int.tryParse(portStr);
 
   if (port == null) {
@@ -28,7 +28,7 @@ void main(List<String> args) async {
   final service = Service();
   final server = await io.serve(service.handler, ip, port);
 
-  log('Serving at http://${server.address.host}:${server.port}}');
+  log('Serving at http://${server.address.host}:${server.port}');
 
   // setTimer();
 }
