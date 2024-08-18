@@ -7,7 +7,6 @@ import 'package:dart_server/models/error_model.dart';
 import 'package:dart_server/models/item_model.dart';
 import 'package:dart_server/mongo_connection.dart';
 import 'package:mongo_dart/mongo_dart.dart';
-import 'package:uuid/uuid.dart';
 
 class ItemController {
   static Future<List<Map<String, dynamic>>> getItems(

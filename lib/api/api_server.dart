@@ -1,14 +1,22 @@
+import 'package:dart_server/api/item_service.dart';
+import 'package:dart_server/api/user_service.dart';
 import 'package:shelf/shelf.dart' as shelf;
+
 import 'package:shelf_router/shelf_router.dart';
 
 part 'api_server.g.dart';
 
-class Service {
+class ApiService {
+  static const String route = "/api";
   // Other routers can be mounted...
-  @Route.mount('/api/v1')
-  Router get _api => Api().router;
+  @Route.mount(route)
+  Router get _apiService => Api().router;
+  @Route.mount(route)
+  Router get _itemService => ItemService().router;
+  @Route.mount(route)
+  Router get _userService => UserService().router;
 
-  shelf.Handler get handler => _$ServiceRouter(this).call;
+  shelf.Handler get handler => _$ApiServiceRouter(this).call;
 }
 
 class Api {
