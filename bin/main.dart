@@ -6,7 +6,6 @@ import 'package:args/args.dart';
 import 'package:dart_server/api/api_server.dart';
 import 'package:dart_server/mongo_connection.dart';
 import 'package:shelf/shelf_io.dart' as io;
-import 'package:shelf_swagger_ui/shelf_swagger_ui.dart';
 
 void main(List<String> args) async {
   final parser = ArgParser()..addOption('port', abbr: 'p');
@@ -29,7 +28,7 @@ void main(List<String> args) async {
 
   final service = ApiService();
 
-  // final path = './specs/swagger.yaml';
+  final path = './specs/swagger.yaml';
   // final handler = SwaggerUI(path, title: 'Swagger Test');
   final server = await io.serve(service.handler, ip, port);
   // final server = await io.serve(handler.call, ip, port);
