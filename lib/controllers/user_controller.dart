@@ -3,20 +3,11 @@ import 'dart:developer';
 import 'package:dart_server/jwt/jwt.dart';
 import 'package:dart_server/models/user_model.dart';
 import 'package:mongo_dart/mongo_dart.dart';
-import 'package:uuid/uuid.dart';
 
+import '../helpers/id_helper.dart';
 import '../mongo_connection.dart';
 
 class UserController {
-  static UserModel getUserByToken(String token) {
-    final decodeToken = decodificarJWT(token);
-    final user = UserModel.fromJson(decodeToken ?? {});
-    if (user.userUID == null) {
-      throw Exception("Error al decodificar el JWT");
-    }
-    return user;
-  }
-
   static Future<Map<String, dynamic>> registerUser(UserModel body) async {
     try {
       final tablaUsuarios = dataBase.collection("usuarios");
@@ -28,7 +19,7 @@ class UserController {
         throw Exception("Este nombre de usuario ya está en uso");
       }
 
-      body.userUID = Uuid().v4().toUpperCase();
+      body.userUID = IdHelper.createID;
       final response = {
         "token": generarJWT(body.toJson()),
       };

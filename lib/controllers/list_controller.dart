@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:dart_server/controllers/user_controller.dart';
+import 'package:dart_server/helpers/id_helper.dart';
+import 'package:dart_server/helpers/user.dart';
 import 'package:dart_server/models/error_model.dart';
 import 'package:dart_server/models/item_model.dart';
 import 'package:dart_server/mongo_connection.dart';
@@ -9,23 +10,38 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'package:uuid/uuid.dart';
 
 class ItemController {
-  static Future<List<Map<String, dynamic>>> getItems(String userUID) async {
-    List<Map<String, dynamic>> items = [];
+  static Future<List<Map<String, dynamic>>> getItems(
+      Map<String, String> header) async {
+    try {
+      final token =
+          header["authorization"].toString().replaceAll("Bearer ", "");
+      final user = UserHelper.getUserByToken(token);
 
-    final collection = dataBase.collection("listaitems");
-    await collection.find(where.eq("user_uid", userUID)).forEach((element) {
-      log(element.runtimeType.toString());
+      user.userUID = user.userUID;
+      List<Map<String, dynamic>> items = [];
 
-      element.forEach((key, value) {
-        if (value is DateTime) {
-          element[key] = value.toIso8601String();
-        }
+      final collection = dataBase.collection("listaitems");
+      await collection
+          .find(where.eq("user_uid", user.userUID))
+          .forEach((element) {
+        log(element.runtimeType.toString());
+
+        element.forEach((key, value) {
+          if (value is DateTime) {
+            element[key] = value.toIso8601String();
+          }
+        });
+
+        items.add(element);
       });
 
-      items.add(element);
-    });
-
-    return items;
+      return items;
+    } on Exception catch (e) {
+      throw Exception(json.encode({
+        "error": e.toString(),
+        "statusCode": 401,
+      }));
+    }
   }
 
   static Future<Map<String, dynamic>> addItem(
@@ -33,9 +49,9 @@ class ItemController {
     try {
       final token =
           header["authorization"].toString().replaceAll("Bearer ", "");
-      final user = UserController.getUserByToken(token);
+      final user = UserHelper.getUserByToken(token);
       body.dateCreated = DateTime.now();
-      body.itemId = Uuid().v4().toUpperCase();
+      body.itemId = IdHelper.createID;
       body.userUID = user.userUID;
       final listCollection = dataBase.collection("listaitems");
       final response = await listCollection.insert(body.toJson);
