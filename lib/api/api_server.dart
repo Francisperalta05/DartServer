@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:shelf/shelf.dart' as shelf;
+import 'package:shelf/shelf.dart';
 
 import 'package:shelf_router/shelf_router.dart';
 
@@ -18,7 +20,11 @@ class ApiService {
   @Route.mount(route)
   Router get _apiService => Api().router;
 
-  shelf.Handler get handler => _$ApiServiceRouter(this).call;
+  // shelf.Handler get handler => _$ApiServiceRouter(this).call;
+
+  Future<shelf.Response> handler(Request request) {
+    return _$ApiServiceRouter(this).call(request);
+  }
 }
 
 class Api {
