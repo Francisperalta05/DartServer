@@ -11,10 +11,13 @@ import 'package:shelf/shelf_io.dart' as io;
 // Middleware para añadir los encabezados CORS
 Middleware corsMiddleware = (Handler handler) {
   return (Request request) async {
+    // Obtener el origen de la solicitud
+    final origin = request.headers['origin'];
+
     // Manejar la solicitud preflight (OPTIONS)
     if (request.method == 'OPTIONS') {
       return Response.ok('', headers: {
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': origin ?? '*',
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         'Access-Control-Allow-Credentials': 'true',
@@ -26,7 +29,7 @@ Middleware corsMiddleware = (Handler handler) {
 
     // Añadir los encabezados CORS a la respuesta
     return response.change(headers: {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': origin ?? '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization',
       'Access-Control-Allow-Credentials': 'true',

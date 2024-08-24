@@ -33,27 +33,23 @@ class UserController {
   }
 
   static Future<Map<String, dynamic>> loginUser(UserModel body) async {
-    try {
-      final tablaUsuarios = dataBase.collection("usuarios");
+    final tablaUsuarios = dataBase.collection("usuarios");
 
-      final userMap = await tablaUsuarios.findOne(
-          where.eq("user_name", body.userName).eq("password", body.password));
+    final userMap = await tablaUsuarios.findOne(
+        where.eq("user_name", body.userName).eq("password", body.password));
 
-      if (userMap == null) throw Exception("Usuario o contraseña incorrecto");
+    if (userMap == null) throw Exception("Usuario o contraseña incorrecto");
 
-      final userModel = UserModel.fromJson(userMap);
-      final token = generarJWT(userModel.toJson());
-      final decode = decodificarJWT(token);
-      final response = {
-        "token": token,
-        "decode": decode,
-      };
-      log(tablaUsuarios.toString());
+    final userModel = UserModel.fromJson(userMap);
+    final token = generarJWT(userModel.toJson());
+    final decode = decodificarJWT(token);
+    final response = {
+      "token": token,
+      "decode": decode,
+    };
+    log(tablaUsuarios.toString());
 
-      return response;
-    } on Exception catch (e) {
-      return {"error": e.toString().replaceAll("Exception: ", "")};
-    }
+    return response;
   }
 
   static Future<List<Map<String, dynamic>>> getUsers() async {
