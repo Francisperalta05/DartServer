@@ -116,7 +116,8 @@ class Api {
     } catch (e) {
       log("${e.runtimeType} $e");
       if (e is ServerException) {
-        return shelf.Response.unauthorized(e.message);
+        // return shelf.Response.unauthorized(e.message);
+        return shelf.Response(401, body: e.message);
       }
       return shelf.Response.badRequest(body: e.ex);
     }
