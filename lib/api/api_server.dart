@@ -8,8 +8,11 @@ import 'package:shelf_router/shelf_router.dart';
 
 import '../controllers/list_controller.dart';
 import '../controllers/user_controller.dart';
+import '../exception/http_exception.dart';
 import '../models/item_model.dart';
 import '../models/user_model.dart';
+
+import '../extensions/exception_string.dart';
 
 part 'api_server.g.dart';
 
@@ -110,8 +113,12 @@ class Api {
       final user = UserModel.fromJson(json.decode(data));
       final users = await UserController.loginUser(user);
       return shelf.Response.ok(json.encode(users));
-    } on Exception catch (e) {
-      return shelf.Response.badRequest(body: e);
+    } catch (e) {
+      log("${e.runtimeType} $e");
+      if (e is ServerException) {
+        return shelf.Response.unauthorized(e.message);
+      }
+      return shelf.Response.badRequest(body: e.ex);
     }
   }
 
